@@ -9,7 +9,8 @@
                 //console.log(event);
                 $('#msgBox').append(JSON.parse(event.data)["message"]);  
                 $('#msgBox').append('</br>');
-                
+
+                //滚动条自动向下
                 var e = document.getElementById("msgBox");
                 e.scrollTop = e.scrollHeight;
             }
