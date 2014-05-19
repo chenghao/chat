@@ -5,7 +5,10 @@ import tornado.websocket
 import json
 import uuid
 
+from dbutil import authorized
+
 class IndexHandler(tornado.web.RequestHandler):
+    @authorized()
     def get(self):
         self.render("index.html")
 

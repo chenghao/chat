@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户登录</title>
+    <script src="{{ static_url('js/jquery-1.8.0.min.js') }}"></script>
+</head>
+<body>
+    <form action="login" method="post">
+        <div>
+            登录名：<input type="text" id="loginName" name="loginName">
+        </div>
+        <div>
+            密码：<input type="password" id="password" name="password">
+        </div>
+        <input type="submit" value="登录">
+    </form>
+</body>
+</html>
