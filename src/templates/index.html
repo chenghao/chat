@@ -6,7 +6,7 @@
         <script type="text/javascript">
             var ws = new WebSocket("ws://localhost:8000/chat");
             ws.onmessage = function(event) {
-                //console.log(event);
+                console.log(event);
                 $('#msgBox').append(JSON.parse(event.data)["message"]);  
                 $('#msgBox').append('</br>');
 
@@ -16,6 +16,8 @@
             }
             function send1() {
                 //如果要向某个客户端发送消息：某个客户端的id`内容
+                //TODO
+                //ws.send('{"msg": '+$("#chat").val()+', "flag": "123"}');
                 ws.send($("#chat").val());
                 $("#chat").val("");
             }
@@ -43,6 +45,9 @@
 	            <button  onclick="send1()">send</button>
 	        </div>	
         </div>
-        
+
+        <div>
+            <a href="/logout">退出</a>
+        </div>
     </body>
 </html>

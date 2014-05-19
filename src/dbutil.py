@@ -1,6 +1,7 @@
 #coding:utf-8
 
 import torndb
+from hashlib import md5
 
 DBHOST = "localhost"
 DBPORT = 3306
@@ -51,6 +52,13 @@ class User():
         conn._ensure_connected()
         return conn.get('SELECT * FROM `user` WHERE `loginName` = \'%s\' LIMIT 1' % str(loginName))
 
+    def add_user(self, loginName, password, nickName, serial):
+        if loginName and password and nickName and serial:
+            sql = "insert into `user` (`loginName`, `password`, `nickName`, `serial`) values(%s, %s, %s, %s)"
+            conn._ensure_connected()
+            return conn.execute(sql, loginName, md5(password.encode('utf-8')).hexdigest(), nickName, serial)
+        else:
+            return None
 
 User = User()
 

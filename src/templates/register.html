@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户注册</title>
+</head>
+<body>
+    <form action="/register" method="post">
+        <div>
+            登录名：<input type="text" id="loginName" name="loginName">
+        </div>
+        <div>
+            密码：<input type="password" id="password" name="password">
+        </div>
+        <div>
+            呢称：<input type="text" id="nickName" name="nickName">
+        </div>
+        <input type="submit" value="注册">
+    </form>
+    {% if msg != '' %}
+        <div>{{msg}}</div>
+    {% end %}
+</body>
+</html>
