@@ -4,21 +4,28 @@
         <script src="{{ static_url('js/jquery-1.8.0.min.js') }}"></script>
         
         <script type="text/javascript">
+            var toSerial = "";
+
             var ws = new WebSocket("ws://localhost:8000/chat");
             ws.onmessage = function(event) {
                 //console.log(event);
-                var msg = JSON.parse(event.data)["message"]
-                var users_list = JSON.parse(event.data)["users_list"]
+                var userInfo = JSON.parse(event.data)["user"];
+                var users_list = JSON.parse(event.data)["users_list"];
+                var message = JSON.parse(event.data)["message"];
 
-                if(msg != undefined){
-                    $('#msgBox').append("<p>"+JSON.parse(event.data)["message"]+"</p>");
+                if(userInfo != undefined){
+                    $('#selfNickName').append(userInfo+"：");
+                }
+
+                if(message != undefined){
+                    $("#msgBox").append(message+"<br />")
                 }
 
                 if(users_list != undefined){
                     $('#userList').empty();
                     $.each(users_list, function(i, item){
                         $('#userList').append("<div>");
-                        $('#userList').append("<p>"+item.nickName+"</p>");
+                        $('#userList').append("<p style='cursor: pointer' onclick='chooseUser(\""+item.serial+"\", \""+item.nickName+"\")'>"+item.nickName+"</p>");
                         $('#userList').append("<input type='hidden' id='users_"+i+"' value='"+item.serial+"'>");
                     })
                 }
@@ -31,8 +38,18 @@
                 //如果要向某个客户端发送消息：某个客户端的id`内容
                 //TODO
                 //ws.send('{"msg": '+$("#chat").val()+', "flag": "123"}');
-                ws.send($("#chat").val());
+                if(toSerial == ""){
+                    ws.send($("#chat").val());
+                }else{
+                    ws.send("{'msg':'"+$('#chat').val()+"', 'serial': '"+toSerial+"'}");
+                }
                 $("#chat").val("");
+            }
+            function chooseUser(serial, nickName){
+                $("#toNickName").empty();
+                $("#toNickName").append("和 "+nickName+" 聊天中");
+
+                toSerial = serial;
             }
         </script>
         
@@ -43,21 +60,27 @@
     </head>
 
     <body>
-        <div id="userList" style="width: 200px; height: 300px; border: 1px solid #000000; overflow: auto; float: left;">
-
-        </div>
-        
-        <div style="float: left; padding-left: 20px;">
-	        <div id="msgBox" style="width:400px;height:300px;border:1px solid #000000;overflow: auto;"></div>
-	        <div>
-	            hello
-	            <input id="chat">
-	            <button  onclick="send1()">send</button>
-	        </div>	
+        <div style="width: 800px; height: 50px;">
+            <div id="selfNickName" style="float: left; font-size: 25px; width: 200px;"></div>
+            <div id="toNickName" style="float: left; padding-left: 20px; font-size: 25px;">
+            </div>
         </div>
 
         <div>
-            <a href="/logout">退出</a>
+            <div id="userList" style="width: 200px; height: 300px; border: 1px solid #000000; overflow: auto; float: left;">
+            </div>
+
+            <div style="float: left; padding-left: 20px;">
+                <div id="msgBox" style="width:400px;height:300px;border:1px solid #000000;overflow: auto;"></div>
+                <div>
+                    <input id="chat" style="width: 350px;">
+                    <button  onclick="send1()">send</button>
+                </div>
+            </div>
+
+            <div style="float: left; width: 50px; padding-left: 20px;">
+                <a href="/logout">退出</a>
+            </div>
         </div>
     </body>
 </html>
