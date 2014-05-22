@@ -13,6 +13,7 @@ DBNAME = "chat"
 conn = torndb.Connection("%s:%s" % (DBHOST, str(DBPORT)), DBNAME, DBUSER, DBPWD)
 cursor = conn._cursor()
 
+
 def authorized(url='/login'):
     def wrap(handler):
         def authorized_handler(self, *args, **kw):
@@ -38,6 +39,7 @@ def authorized(url='/login'):
         return authorized_handler
     return wrap
 
+
 class User():
     def check_user(self, loginName='', password=''):
         if loginName and password:
@@ -58,6 +60,14 @@ class User():
             sql = "insert into `user` (`loginName`, `password`, `nickName`, `serial`) values(%s, %s, %s, %s)"
             conn._ensure_connected()
             return conn.execute(sql, loginName, md5(password.encode('utf-8')).hexdigest(), nickName, serial)
+        else:
+            return None
+
+    def update_user_status(self, loginName, status):
+        if loginName and status:
+            sql = "update user set status = %s where loginName = %s"
+            conn._ensure_connected()
+            return conn.execute(sql, status, loginName)
         else:
             return None
 

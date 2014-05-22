@@ -12,6 +12,7 @@ from users import urls as userUrls
 from tornado.options import define, options
 define("port", default=8000, help="run on the given port", type=int)
 
+
 class Application(tornado.web.Application):
     def __init__(self):
         handlers = chatUrls + userUrls
