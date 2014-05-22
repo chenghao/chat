@@ -6,9 +6,22 @@
         <script type="text/javascript">
             var ws = new WebSocket("ws://localhost:8000/chat");
             ws.onmessage = function(event) {
-                console.log(event);
-                $('#msgBox').append(JSON.parse(event.data)["message"]);  
-                $('#msgBox').append('</br>');
+                //console.log(event);
+                var msg = JSON.parse(event.data)["message"]
+                var users_list = JSON.parse(event.data)["users_list"]
+
+                if(msg != undefined){
+                    $('#msgBox').append("<p>"+JSON.parse(event.data)["message"]+"</p>");
+                }
+
+                if(users_list != undefined){
+                    $('#userList').empty();
+                    $.each(users_list, function(i, item){
+                        $('#userList').append("<div>");
+                        $('#userList').append("<p>"+item.nickName+"</p>");
+                        $('#userList').append("<input type='hidden' id='users_"+i+"' value='"+item.serial+"'>");
+                    })
+                }
 
                 //滚动条自动向下
                 var e = document.getElementById("msgBox");
@@ -25,16 +38,13 @@
         
         <style type="text/css">
             #userList p{margin: 5px 0 5px 0;}
+            #msgBox p{margin: 5px 0 5px 0;}
         </style>
     </head>
 
     <body>
         <div id="userList" style="width: 200px; height: 300px; border: 1px solid #000000; overflow: auto; float: left;">
-            <p>0000</p>
-            <p>0000</p>
-            <p>0000</p>
-            <p>0000</p>
-            <p>0000</p>
+
         </div>
         
         <div style="float: left; padding-left: 20px;">

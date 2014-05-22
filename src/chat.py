@@ -15,8 +15,8 @@ class IndexHandler(tornado.web.RequestHandler):
 
 class SocketHandler(tornado.websocket.WebSocketHandler):
     """docstring for SocketHandler"""
-    clients = set()
     client_map = {}
+    users_map = {}
 
     @staticmethod
     def send_to_all(self, message):
@@ -34,30 +34,39 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         loginName = self.get_cookie("loginName", "")
         user = User.get_user_by_name(loginName)
 
+        SocketHandler.client_map[user.serial] = self
+        User.update_user_status(user.loginName, 2)
+
+        users = {}
+        users["nickName"] = user.nickName.encode('utf-8')
+        users["serial"] = user.serial
+        SocketHandler.users_map[loginName] = users
+        print SocketHandler.users_map
+
         self.write_message(json.dumps({
             'type': 'sys',
             'message': '欢迎 ' + user.nickName.encode('utf-8') + ' 的到来',
         }))
+
         SocketHandler.send_to_all(
             self,
             {
                 'type': 'sys',
-                'message': '用户 ' + user.nickName.encode('utf-8') + ' 加入',
+                'users_list': SocketHandler.users_map,
             }
         )
-        SocketHandler.client_map[user.serial] = self
-        User.update_user_status(user.loginName, 2)
 
     def on_close(self):
         loginName = self.get_cookie("loginName", "")
         user = User.get_user_by_name(loginName)
 
         del SocketHandler.client_map[user.serial]
+        del SocketHandler.users_map[loginName]
         User.update_user_status(user.loginName, 1)
 
         SocketHandler.send_to_all(self, {
             'type': 'sys',
-            'message': '用户 ' + user.nickName.encode('utf-8') + ' 退出',
+            'users_list': SocketHandler.users_map,
         })
 
     def on_message(self, message):
