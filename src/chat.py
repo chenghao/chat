@@ -43,7 +43,6 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         users["nickName"] = user.nickName.encode('utf-8')
         users["serial"] = user.serial
         SocketHandler.users_map[loginName] = users
-        print SocketHandler.users_map
 
         self.write_message(json.dumps({
             'type': 'sys',

@@ -35,12 +35,10 @@
                 e.scrollTop = e.scrollHeight;
             }
             function send1() {
-                //如果要向某个客户端发送消息：某个客户端的id`内容
-                //TODO
-                //ws.send('{"msg": '+$("#chat").val()+', "flag": "123"}');
                 if(toSerial == ""){
                     ws.send($("#chat").val());
                 }else{
+                    //向某个人发送消息
                     ws.send("{'msg':'"+$('#chat').val()+"', 'serial': '"+toSerial+"'}");
                 }
                 $("#chat").val("");
