@@ -6,7 +6,8 @@ from hashlib import md5
 DBHOST = "localhost"
 DBPORT = 3306
 DBUSER = "root"
-DBPWD = "0123456789"
+#DBPWD = "0123456789"
+DBPWD = "hao"
 DBNAME = "chat"
 
 conn = torndb.Connection("%s:%s" % (DBHOST, str(DBPORT)), DBNAME, DBUSER, DBPWD)
