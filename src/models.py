@@ -8,3 +8,4 @@ class User():
         self.password = password
         self.nickName = nickName
         self.serial = serial
+
